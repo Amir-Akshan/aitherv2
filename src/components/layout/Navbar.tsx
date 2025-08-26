@@ -7,10 +7,12 @@ import { useWallet } from "@/contexts/WalletContext";
 
 const navLinks = [
   { href: "/whitepaper", label: "Create" },
-  { href: "https://x.com/PyxisLabsAI", label: "How It Works?", external: true },
+  { href: "/token", label: "Token" },
+  { href: "https://aither-1.gitbook.io/aither/", label: "How It Works?", external: true },
   { href: "/docs", label: "Docs" },
+
   { href: "https://x.com/PyxisLabsAI", label: "X", external: true },
-  { href: "https://x.com/PyxisLabsAI", label: "Support", external: true },
+  { href: "https://discord.gg/pyxislabs", label: "Support", external: true },
   //{ href: "/roadmap", label: "Roadmap" },
 
 ];
@@ -60,7 +62,11 @@ export default function Navbar() {
               key={link.href}
               href={link.href}
               target={link.external ? "_blank" : undefined}
-              className="text-gray-700 hover:text-orange-500 transition-colors"
+              className={`transition-colors ${
+                link.label === "Token" 
+                  ? "text-orange-500 hover:text-orange-600" 
+                  : "text-gray-700 hover:text-orange-500"
+              }`}
             >
               {link.label}
             </Link>
@@ -128,7 +134,11 @@ export default function Navbar() {
                   key={link.href}
                   href={link.href}
                   target={link.external ? "_blank" : undefined}
-                  className="text-gray-700 hover:text-orange-500 transition-colors"
+                  className={`transition-colors ${
+                    link.label === "Token" 
+                      ? "text-orange-500 hover:text-orange-600" 
+                      : "text-gray-700 hover:text-orange-500"
+                  }`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {link.label}
