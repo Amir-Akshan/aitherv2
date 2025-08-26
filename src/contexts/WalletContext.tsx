@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 
 interface WalletContextType {
   connected: boolean;
-  wallet: any;
+  wallet: unknown;
   connect: () => Promise<void>;
   disconnect: () => void;
 }
@@ -13,20 +13,20 @@ const WalletContext = createContext<WalletContextType | undefined>(undefined);
 
 export function WalletProvider({ children }: { children: ReactNode }) {
   const [connected, setConnected] = useState(false);
-  const [wallet, setWallet] = useState<any>(null);
+  const [wallet, setWallet] = useState<unknown>(null);
 
   useEffect(() => {
     // Check if Phantom wallet is installed
     const checkIfWalletIsConnected = async () => {
       try {
-        const { solana } = window as any;
+        const { solana } = window as { solana?: { isPhantom?: boolean; connect: (options?: { onlyIfTrusted?: boolean }) => Promise<unknown> } };
         
         if (solana?.isPhantom) {
           const response = await solana.connect({ onlyIfTrusted: true });
           setWallet(response);
           setConnected(true);
         }
-      } catch (error) {
+      } catch {
         console.log('Wallet not connected');
       }
     };
@@ -41,7 +41,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
     checkIfWalletIsConnected();
 
     // Add event listeners
-    const { solana } = window as any;
+    const { solana } = window as { solana?: { isPhantom?: boolean; on: (event: string, callback: () => void) => void; off: (event: string, callback: () => void) => void } };
     if (solana?.isPhantom) {
       solana.on('accountChanged', handleAccountChange);
       solana.on('disconnect', handleAccountChange);
@@ -49,6 +49,7 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
     // Cleanup
     return () => {
+      const { solana } = window as { solana?: { isPhantom?: boolean; off: (event: string, callback: () => void) => void } };
       if (solana?.isPhantom) {
         solana.off('accountChanged', handleAccountChange);
         solana.off('disconnect', handleAccountChange);
@@ -58,13 +59,13 @@ export function WalletProvider({ children }: { children: ReactNode }) {
 
   const connect = async () => {
     try {
-      const { solana } = window as any;
+      const { solana } = window as { solana?: { isPhantom?: boolean; connect: () => Promise<unknown> } };
       
       if (solana?.isPhantom) {
         const response = await solana.connect();
         setWallet(response);
         setConnected(true);
-        console.log('Connected to Phantom wallet:', response.publicKey.toString());
+        console.log('Connected to Phantom wallet:', (response as { publicKey?: { toString: () => string } })?.publicKey?.toString());
       } else {
         alert('Phantom wallet is not installed. Please install it from https://phantom.app/');
       }

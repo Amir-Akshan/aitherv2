@@ -89,7 +89,7 @@ export default function Navbar() {
               />
             </svg>
             {connected 
-              ? wallet?.publicKey?.toString().slice(0, 4) + '...' + wallet?.publicKey?.toString().slice(-4)
+              ? (wallet as { publicKey?: { toString: () => string } })?.publicKey?.toString().slice(0, 4) + '...' + (wallet as { publicKey?: { toString: () => string } })?.publicKey?.toString().slice(-4)
               : 'Connect Wallet'
             }
           </button>
@@ -165,7 +165,7 @@ export default function Navbar() {
                   />
                 </svg>
                 {connected 
-                  ? wallet?.publicKey?.toString().slice(0, 4) + '...' + wallet?.publicKey?.toString().slice(-4)
+                  ? (wallet as { publicKey?: { toString: () => string } })?.publicKey?.toString().slice(0, 4) + '...' + (wallet as { publicKey?: { toString: () => string } })?.publicKey?.toString().slice(-4)
                   : 'Connect Wallet'
                 }
               </button>
